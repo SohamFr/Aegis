@@ -9,3 +9,15 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.8
+      - key: SATELLITE_CATALOG_API_KEY
+        value: ow_KTnBx6qzwY3aeskEQnTVVj-FE0JIeDQFQG1tZtNPip0
+      - key: NOAA_FLUX_ENDPOINT
+        value: https://services.swpc.noaa.gov/products/summary/10cm-flux.json
+      - key: NOAA_30DAY_FLUX_ENDPOINT
+        value: https://services.swpc.noaa.gov/products/10cm-flux-30-day.json
+      - key: LIVE_BROADCAST_HZ
+        value: "5.0"
+      - key: MISS_DISTANCE_CRITICAL_KM
+        value: "1.0"
+      - key: MISS_DISTANCE_WARNING_KM
+        value: "5.0"
