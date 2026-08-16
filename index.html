@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <title>Aegis — Space Debris Collision Avoidance System</title>
+    <meta
+      name="description"
+      content="Real-time AI predictive shield and automated evasive maneuver planning for critical orbital infrastructure."
+    />
+
+    <!-- Inter (UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- BubbledotICG-FinePos (retro dot-matrix display) -->
+    <link
+      href="https://db.onlinewebfonts.com/c/8cb707a9b8a73f8a7403336b861c3074?family=BubbledotICG-FinePos"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome 6.5.2 (enterprise brand icons) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Full-bleed background video -->
+    <div class="bg">
+      <video class="bg-video" autoplay muted loop playsinline>
+        <source
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260809_012548_ef22562c-c0ae-4816-ad9d-f8922af4e6a7.mp4"
+          type="video/mp4"
+        />
+      </video>
+    </div>
+
+    <div class="page">
+      <!-- 1) Header -->
+      <header class="header">
+        <a class="logo" href="#" aria-label="Home" data-nav="landing">
+          <img src="assets/logo.webp" alt="" width="52" height="52" />
+        </a>
+
+        <nav class="nav-pill" aria-label="Primary">
+          <a class="nav-link is-active" href="#landing" data-nav="landing">Dashboard</a>
+          <a class="nav-link" href="#catalog" data-nav="catalog">Catalog</a>
+          <a class="nav-link" href="#conjunctions" data-nav="conjunctions">Conjunctions</a>
+          <a class="nav-link" href="#maneuvers" data-nav="maneuvers">Maneuvers</a>
+          <a class="nav-link" href="#calculator" data-nav="calculator">Calculator</a>
+          <a class="nav-link" href="#reports" data-nav="reports">Reports</a>
+          <a class="nav-link" href="#settings" data-nav="settings">Settings</a>
+        </nav>
+
+        <div class="header-actions">
+          <button class="icon-btn" id="alertsBtn" type="button" aria-label="Alerts">
+            <i class="fa-solid fa-bell" aria-hidden="true"></i>
+          </button>
+          <button class="icon-btn" id="profileBtn" type="button" aria-label="Profile">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <button
+          class="burger"
+          id="burger"
+          type="button"
+          aria-label="Menu"
+          aria-controls="mobileMenu"
+          aria-expanded="false"
+        >
+          <span class="burger-bars">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+      </header>
+
+      <!-- ====================================================
+           VIEWS — only the .active view is visible at a time
+           ==================================================== -->
+
+      <!-- Landing / Home -->
+      <section id="landing" class="view active">
+        <!-- 2) Hero -->
+        <main class="hero">
+          <div class="trust anim" style="--d: 0.05s">
+            <div class="avatars">
+              <span class="avatar a1"
+                ><span class="avatar-inner"><i class="fa-brands fa-microsoft" aria-hidden="true"></i></span
+              ></span>
+              <span class="avatar a2"
+                ><span class="avatar-inner"><i class="fa-brands fa-amazon" aria-hidden="true"></i></span
+              ></span>
+              <span class="avatar a3"
+                ><span class="avatar-inner"><i class="fa-brands fa-google" aria-hidden="true"></i></span
+              ></span>
+            </div>
+            <div class="trust-pill"><span>Trusted by 2000+ Enterprises</span></div>
+          </div>
+
+          <h1 class="headline anim">
+            <span>Aegis System</span>
+            <span>OrbitSafe AI Active</span>
+          </h1>
+
+          <p class="subhead anim" style="--d: 0.28s">
+            Real-time AI predictive shield and automated evasive maneuver planning for critical
+            orbital infrastructure.
+          </p>
+
+        </main>
+
+        <!-- 3) Stats footer -->
+        <footer class="stats">
+          <div class="stat anim" style="--d: 0.5s" data-target="12" data-suffix="ms" data-decimals="0">
+            <span class="stat-icon" aria-hidden="true">&lt;</span>
+            <span class="stat-value">0ms</span>
+            <span class="stat-label">Prediction Latency</span>
+          </div>
+          <div class="stat anim" style="--d: 0.58s" data-target="99.9" data-suffix="%" data-decimals="1">
+            <span class="stat-icon" aria-hidden="true">%</span>
+            <span class="stat-value">0.0%</span>
+            <span class="stat-label">Collision Avoidance</span>
+          </div>
+          <div class="stat anim" style="--d: 0.66s" data-target="24" data-suffix="/7" data-decimals="0">
+            <span class="stat-icon" aria-hidden="true">*</span>
+            <span class="stat-value">0/7</span>
+            <span class="stat-label">Autonomous Over-watch</span>
+          </div>
+          <div class="stat anim" style="--d: 0.74s" data-target="36" data-suffix="K" data-decimals="0" id="trackedObjectsLandingStat">
+            <span class="stat-icon" aria-hidden="true">#</span>
+            <span class="stat-value">0K</span>
+            <span class="stat-label">Tracked Objects</span>
+          </div>
+        </footer>
+
+        <!-- 3D Interactive Earth Globe (bottom of landing, 60% of page) -->
+        <div id="landingGlobeContainer" class="landing-globe-container">
+          <canvas id="landingGlobeCanvas"></canvas>
+        </div>
+      </section>
+
+
+
+      <!-- 1. Mission Control Dashboard View -->
+      <section id="dashboard" class="view">
+        <div class="view-panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Mission Control Center</h2>
+              <p class="panel-subtitle">Real-time SGP4 orbital tracking, AI collision risk shield, and autonomous overwatch.</p>
+            </div>
+            <div class="status-badge" id="systemHealthBadge">
+              <span class="status-dot pulse"></span>
+              <span id="systemHealthText">SGP4 Core Online</span>
+            </div>
+          </div>
+
+          <!-- Quick Metrics Bar -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <span class="metric-label">Active Conjunctions</span>
+              <span class="metric-value text-ruby" id="dashActiveConjs">0</span>
+              <span class="metric-meta">SGP4 Live Screening</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Tracked Assets</span>
+              <span class="metric-value text-white" id="dashTrackedCount">19</span>
+              <span class="metric-meta">16,000+ Unified Feeds</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">NOAA F10.7 Solar Flux</span>
+              <span class="metric-value text-amber" id="dashSolarFlux">117 sfu</span>
+              <span class="metric-meta" id="dashSolarMeta">Moderate • +5% LEO Drag</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">AI Risk Heatmap Index</span>
+              <span class="metric-value text-amber" id="dashRiskIndex">0.78</span>
+              <span class="metric-meta">Peak in SSO Debris Belt</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Maneuvers Queued</span>
+              <span class="metric-value text-cyan" id="dashScheduledMnvs">0</span>
+              <span class="metric-meta">Delta-V budget ready</span>
+            </div>
+          </div>
+
+          <!-- 3D LEO Orbital Trajectory & Debris Visualizer -->
+          <div class="surface-card no-padding" style="position: relative;">
+            <div class="card-header" style="padding: 16px 20px 0; margin-bottom: 8px;">
+              <h3 class="card-title">
+                <i class="fa-solid fa-globe text-cyan"></i> 3D LEO Orbital Trajectory &amp; Debris Visualizer
+              </h3>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span class="badge-tag"><span class="status-dot pulse"></span> WebGL 3D Active</span>
+                <button class="btn-secondary btn-sm" id="reset3DCameraBtn"><i class="fa-solid fa-arrows-to-circle"></i> Reset View</button>
+              </div>
+            </div>
+            <div id="orbitGlobeContainer" style="width: 100%; height: 380px; position: relative; background: #06080c; border-radius: 0 0 18px 18px; overflow: hidden;">
+              <canvas id="orbitGlobeCanvas" style="width: 100%; height: 100%; display: block;"></canvas>
+              <div id="orbitGlobeLegend" style="position: absolute; bottom: 12px; left: 16px; background: rgba(14, 18, 25, 0.9); border: 1px solid var(--surface-border); border-radius: 8px; padding: 8px 12px; font-size: 11.5px; display: flex; gap: 14px; pointer-events: none;">
+                <span style="display:flex; align-items:center; gap:6px;"><span style="width:8px; height:8px; border-radius:50%; background:#56d364;"></span> Operational Satellites</span>
+                <span style="display:flex; align-items:center; gap:6px;"><span style="width:8px; height:8px; border-radius:50%; background:#ff7b72;"></span> Tracked Debris</span>
+                <span style="display:flex; align-items:center; gap:6px;"><span style="width:8px; height:8px; border-radius:50%; background:#f2cc60;"></span> Rocket Bodies</span>
+              </div>
+              <div id="orbitTooltip" style="position: absolute; top: 12px; right: 16px; background: rgba(14, 18, 25, 0.92); border: 1px solid var(--surface-border); border-radius: 8px; padding: 8px 14px; font-size: 12px; color:#f0f6fc; pointer-events: none; display: none;">
+                <strong id="tooltipObjName">ISS (ZARYA)</strong><br>
+                <span id="tooltipObjAlt">Alt: 418.2 km | Speed: 7.66 km/s</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <!-- Left: Conjunction Warnings, Anomaly Feed, and Congestion Hotspots -->
+            <div class="grid-column">
+              <div class="surface-card">
+                <div class="card-header">
+                  <h3 class="card-title"><i class="fa-solid fa-triangle-exclamation text-ruby"></i> Critical Conjunction Warnings</h3>
+                  <a href="#conjunctions" data-nav="conjunctions" class="card-action">View All &rarr;</a>
+                </div>
+                <div class="conjunctions-quick-list" id="dashConjunctionsList">
+                  <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Loading conjunction vectors...</div>
+                </div>
+              </div>
+
+              <div class="surface-card">
+                <div class="card-header">
+                  <h3 class="card-title"><i class="fa-solid fa-shield-halved text-cyan"></i> AI Orbital Anomaly Feed</h3>
+                  <span class="badge-tag">Isolation Forest v3.2</span>
+                </div>
+                <div class="anomalies-list" id="dashAnomaliesList">
+                  <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Scanning for orbital drift...</div>
+                </div>
+              </div>
+
+              <div class="surface-card">
+                <div class="card-header">
+                  <h3 class="card-title"><i class="fa-solid fa-fire text-amber"></i> Orbital Congestion Hotspots</h3>
+                </div>
+                <div class="hotspots-list" id="dashHotspotsList">
+                  <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Computing density matrix...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Live Space Weather, Constellation Telemetry, and Operations Status -->
+            <div class="grid-column">
+              <div class="surface-card">
+                <div class="card-header">
+                  <h3 class="card-title"><i class="fa-solid fa-sun text-amber"></i> NOAA SWPC Space Weather &amp; Atmospheric Drag</h3>
+                  <span class="badge-tag" id="spaceWeatherBadge">10.7cm Flux Feed</span>
+                </div>
+                <div class="spaceweather-content" id="dashSpaceWeatherBody">
+                  <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Fetching NOAA SWPC solar flux...</div>
+                </div>
+              </div>
+
+              <div class="surface-card">
+                <div class="card-header">
+                  <h3 class="card-title"><i class="fa-solid fa-satellite text-emerald"></i> Primary Constellation Telemetry</h3>
+                  <span class="live-indicator"><span class="status-dot pulse"></span> 5 Hz Live</span>
+                </div>
+                <div class="telemetry-table-wrapper">
+                  <table class="data-table" id="dashTelemetryTable">
+                    <thead>
+                      <tr>
+                        <th>Object</th>
+                        <th>Type</th>
+                        <th>Altitude</th>
+                        <th>Speed</th>
+                        <th>State</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dashTelemetryBody">
+                      <tr><td colspan="5" class="loading-state">Propagating state vectors...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="surface-card">
+                <div class="card-header">
+                  <h3 class="card-title"><i class="fa-solid fa-tower-broadcast text-cyan"></i> Autonomous Overwatch &amp; Ground Passes</h3>
+                  <span class="badge-risk LOW">ONLINE</span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:10px; font-size:12.5px; color:var(--text-secondary);">
+                  <div style="display:flex; justify-content:space-between; align-items:center; background:var(--surface-2); padding:8px 12px; border-radius:8px; border:1px solid var(--surface-border);">
+                    <span><i class="fa-solid fa-satellite-dish text-cyan"></i> KSAT Svalbard Pass</span>
+                    <strong class="text-white">Active (Elev 48°)</strong>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; background:var(--surface-2); padding:8px 12px; border-radius:8px; border:1px solid var(--surface-border);">
+                    <span><i class="fa-solid fa-radar text-emerald"></i> LeoLabs Phased-Array Tracking</span>
+                    <strong class="text-emerald">Lock Acquired</strong>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; background:var(--surface-2); padding:8px 12px; border-radius:8px; border:1px solid var(--surface-border);">
+                    <span><i class="fa-solid fa-network-wired text-amber"></i> Inter-Satellite Laser Mesh</span>
+                    <strong class="text-white">100% Connected</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Master Operational Status Bar -->
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; background:var(--surface-2); border:1px solid var(--surface-border); border-radius:14px; padding:12px 18px; font-size:12px; color:var(--text-secondary); margin-top:4px;">
+            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+              <span><span class="status-dot pulse" style="display:inline-block; vertical-align:middle; margin-right:6px;"></span> <strong>Core System Status:</strong> Fully Operational</span>
+              <span><strong>Propagation Model:</strong> SGP4 / SDP4 (WGS-84)</span>
+              <span><strong>Screening Cadence:</strong> Continuous 24h Horizon</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span><strong>UTC Time:</strong> <code id="masterUtcClock" style="color:var(--cyan); font-weight:700;">--:--:-- UTC</code></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Space Object Catalog View -->
+      <section id="catalog" class="view">
+        <div class="view-panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Space Object Catalog</h2>
+              <p class="panel-subtitle">NORAD / Space-Track two-line element sets, orbital parameters, and radar cross-sections.</p>
+            </div>
+            <div class="header-actions-group">
+              <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="catalogSearchInput" placeholder="Search by name, NORAD ID, or country..." class="search-input" />
+              </div>
+              <button class="btn-primary btn-sm" id="syncCatalogBtn" title="Sync live 16,000+ satellites from CelesTrak / OrbitWatch">
+                <i class="fa-solid fa-arrows-rotate"></i> Sync Live Feeds
+              </button>
+            </div>
+          </div>
+
+          <!-- Catalog Filter Tabs -->
+          <div class="filter-tabs" id="catalogFilterTabs">
+            <button class="filter-pill is-active" data-filter="ALL">All Objects (12)</button>
+            <button class="filter-pill" data-filter="PAYLOAD">Operational Payloads</button>
+            <button class="filter-pill" data-filter="DEBRIS">Tracked Debris</button>
+            <button class="filter-pill" data-filter="ROCKET BODY">Rocket Bodies</button>
+          </div>
+
+          <!-- Catalog Table -->
+          <div class="surface-card no-padding">
+            <div class="table-scroll">
+              <table class="data-table" id="catalogTable">
+                <thead>
+                  <tr>
+                    <th>NORAD ID</th>
+                    <th>Name / Asset</th>
+                    <th>Type</th>
+                    <th>Altitude</th>
+                    <th>Velocity</th>
+                    <th>Inclination</th>
+                    <th>RCS / Size</th>
+                    <th>Propulsion</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="catalogTableBody">
+                  <tr><td colspan="9" class="loading-state">Loading catalog from SGP4 engine...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Conjunctions Risk View -->
+      <section id="conjunctions" class="view">
+        <div class="view-panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Conjunction Screening & Close Approaches</h2>
+              <p class="panel-subtitle">7-day lookahead all-pairs screening, encounter B-plane geometry, and Foster-1992 collision probability.</p>
+            </div>
+            <div class="filter-tabs" id="conjunctionRiskFilter">
+              <button class="filter-pill is-active" data-risk="ALL">All Events</button>
+              <button class="filter-pill text-ruby" data-risk="CRITICAL">Critical</button>
+              <button class="filter-pill text-amber" data-risk="HIGH">High</button>
+              <button class="filter-pill text-cyan" data-risk="MEDIUM">Medium</button>
+            </div>
+          </div>
+
+          <div class="conjunction-cards-container" id="conjunctionCardsList">
+            <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Screening orbital pairs...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Maneuver Recommendation & Execution Engine View -->
+      <section id="maneuvers" class="view">
+        <div class="view-panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Evasive Maneuver Planning Engine</h2>
+              <p class="panel-subtitle">Multi-objective delta-v minimization, Tsiolkovsky propellant modeling, and post-burn clearance verification.</p>
+            </div>
+            <div class="maneuver-selector-wrap">
+              <label for="maneuverConjSelect" class="input-label">Select Active Conjunction:</label>
+              <select id="maneuverConjSelect" class="custom-select"></select>
+            </div>
+          </div>
+
+          <!-- Active Event Context Banner -->
+          <div class="event-context-banner" id="maneuverEventContext">
+            <div class="event-context-col">
+              <span class="context-sub">Primary Spacecraft</span>
+              <span class="context-val text-white" id="mnvPrimaryName">ISS (ZARYA)</span>
+              <span class="context-meta" id="mnvFuelMeta">Fuel Remaining: 2,500 kg | Isp: 310 s</span>
+            </div>
+            <div class="event-context-col">
+              <span class="context-sub">Threat Object</span>
+              <span class="context-val text-ruby" id="mnvSecondaryName">COSMOS 2251 DEBRIS</span>
+              <span class="context-meta">Hard-Body Combined: 54.35 m</span>
+            </div>
+            <div class="event-context-col">
+              <span class="context-sub">Unmitigated Miss Distance</span>
+              <span class="context-val text-ruby" id="mnvMissDist">0.412 km</span>
+              <span class="context-meta" id="mnvPc">Pc = 3.82e-4 (CRITICAL)</span>
+            </div>
+            <div class="event-context-col">
+              <span class="context-sub">Time of Closest Approach</span>
+              <span class="context-val text-amber" id="mnvTca">TCA: In 14h 32m</span>
+              <span class="context-meta" id="mnvRelVel">Relative Speed: 14.82 km/s</span>
+            </div>
+          </div>
+
+          <!-- Maneuver Options Grid -->
+          <div class="maneuver-plans-grid" id="maneuverPlansGrid">
+            <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Synthesizing burn trajectories...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Standalone Collision Probability Calculator View -->
+      <section id="calculator" class="view">
+        <div class="view-panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Collision Probability Calculator</h2>
+              <p class="panel-subtitle">Ad-hoc probability of collision (Pc) modeling via Foster-1992 2D encounter integration, Monte Carlo simulation, or Chan approximation.</p>
+            </div>
+            <span class="badge-tag">Mathematical SSA Engine</span>
+          </div>
+
+          <div class="calculator-layout">
+            <!-- Left: Form -->
+            <div class="surface-card">
+              <h3 class="card-title mb-16">Encounter Parameters</h3>
+              <form id="calcForm" class="calc-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="input-label" for="calcObj1">Primary Object</label>
+                    <select id="calcObj1" class="custom-select">
+                      <option value="25544">ISS (ZARYA) [25544]</option>
+                      <option value="44713">STARLINK-1007 [44713]</option>
+                      <option value="48274">TIANGONG (CSS) [48274]</option>
+                      <option value="51085">LANDSAT-9 [51085]</option>
+                      <option value="CUSTOM">Custom Manual Input</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="input-label" for="calcObj2">Secondary Threat Object</label>
+                    <select id="calcObj2" class="custom-select">
+                      <option value="33492">COSMOS 2251 DEBRIS [33492]</option>
+                      <option value="31113">FENGYUN 1C DEBRIS [31113]</option>
+                      <option value="22824">SL-16 R/B [22824]</option>
+                      <option value="27386">ENVISAT [27386]</option>
+                      <option value="CUSTOM">Custom Manual Input</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="input-label" for="calcMissDist">Nominal Miss Distance (km)</label>
+                    <input type="number" id="calcMissDist" class="custom-input" value="0.450" step="0.001" min="0.001" />
+                  </div>
+                  <div class="form-group">
+                    <label class="input-label" for="calcRadius">Combined Hard-Body Radius (m)</label>
+                    <input type="number" id="calcRadius" class="custom-input" value="15.0" step="0.5" min="0.1" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="input-label" for="calcMethod">Algorithm / Method</label>
+                    <select id="calcMethod" class="custom-select">
+                      <option value="FOSTER_1992">Foster-1992 (2D B-Plane Quadrature)</option>
+                      <option value="MONTE_CARLO">Monte Carlo Covariance Perturbation</option>
+                      <option value="CHAN">Chan Analytic Series Expansion</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="input-label" for="calcSamples">Monte Carlo Samples</label>
+                    <input type="number" id="calcSamples" class="custom-input" value="10000" step="1000" min="1000" max="100000" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="input-label" for="calcSigmaX">Covariance Sigma X (Along-Track, m)</label>
+                    <input type="number" id="calcSigmaX" class="custom-input" value="200.0" step="10" />
+                  </div>
+                  <div class="form-group">
+                    <label class="input-label" for="calcSigmaY">Covariance Sigma Y (Cross-Track, m)</label>
+                    <input type="number" id="calcSigmaY" class="custom-input" value="100.0" step="10" />
+                  </div>
+                </div>
+
+                <button type="submit" class="btn-primary w-100 mt-16" id="calcSubmitBtn">
+                  <i class="fa-solid fa-calculator"></i> Compute Collision Probability
+                </button>
+              </form>
+            </div>
+
+            <!-- Right: Results -->
+            <div class="surface-card">
+              <h3 class="card-title mb-16">Computation Results</h3>
+              <div class="calc-results-body" id="calcResults">
+                <div class="empty-state">
+                  <i class="fa-solid fa-chart-pie empty-icon"></i>
+                  <p>Click "Compute Collision Probability" to execute the numerical quadrature or Monte Carlo simulation.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Reports & Audit Logs View -->
+      <section id="reports" class="view">
+        <div class="view-panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Compliance Reports & Audit Trail</h2>
+              <p class="panel-subtitle">Cryptographically verified mission compliance logs, conjunction risk summaries, and operator authorizations.</p>
+            </div>
+            <div class="header-actions-group">
+              <button class="btn-secondary" id="exportCsvBtn"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+              <button class="btn-primary" id="exportJsonBtn"><i class="fa-solid fa-file-code"></i> Export Signed JSON</button>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <!-- Left: Executed Maneuver Authorizations -->
+            <div class="grid-column">
+              <div class="surface-card">
+                <div class="card-header">
+                  <h3 class="card-title"><i class="fa-solid fa-signature text-cyan"></i> Scheduled & Executed Maneuvers</h3>
+                </div>
+                <div class="executed-list" id="reportsExecutedList">
+                  <div class="loading-state">Loading authorization records...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Immutable Audit Trail -->
+            <div class="grid-column">
+              <div class="surface-card">
+                <div class="card-header">
+                  <h3 class="card-title"><i class="fa-solid fa-clipboard-list text-emerald"></i> System Audit Log</h3>
+                  <span class="badge-tag">SHA-256 Verified</span>
+                </div>
+                <div class="audit-table-wrapper">
+                  <table class="data-table" id="auditTable">
+                    <thead>
+                      <tr>
+                        <th>Timestamp (UTC)</th>
+                        <th>User / Actor</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                      </tr>
+                    </thead>
+                    <tbody id="auditTableBody">
+                      <tr><td colspan="4" class="loading-state">Loading audit trail...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Settings View -->
+      <section id="settings" class="view">
+        <div class="view-panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">System Settings & Thresholds</h2>
+              <p class="panel-subtitle">Configure autonomous overwatch, conjunction screening criteria, and alert dispatch channels.</p>
+            </div>
+            <button class="btn-primary" id="saveSettingsBtn"><i class="fa-solid fa-floppy-disk"></i> Save Configuration</button>
+          </div>
+
+          <div class="settings-grid">
+            <div class="surface-card">
+              <h3 class="card-title mb-16">Collision Thresholds</h3>
+              <div class="settings-form">
+                <div class="form-group mb-16">
+                  <label class="input-label" for="settingCriticalMiss">Critical Miss Distance (km)</label>
+                  <input type="number" id="settingCriticalMiss" class="custom-input" value="1.0" step="0.1" />
+                  <span class="field-hint">Triggers immediate emergency alarm and automated maneuver calculation.</span>
+                </div>
+
+                <div class="form-group mb-16">
+                  <label class="input-label" for="settingWarningMiss">Warning Miss Distance (km)</label>
+                  <input type="number" id="settingWarningMiss" class="custom-input" value="5.0" step="0.5" />
+                  <span class="field-hint">Objects entering this radius are tracked with elevated covariance sampling.</span>
+                </div>
+
+                <div class="form-group mb-16">
+                  <label class="input-label" for="settingCriticalPc">Critical Collision Probability Threshold (Pc)</label>
+                  <input type="text" id="settingCriticalPc" class="custom-input" value="1e-4" />
+                </div>
+              </div>
+            </div>
+
+            <div class="surface-card">
+              <h3 class="card-title mb-16">Autonomous Overwatch & Integrations</h3>
+              <div class="settings-form">
+                <div class="form-group mb-16">
+                  <label class="input-label" for="settingWebhook">Operations Webhook URL</label>
+                  <input type="text" id="settingWebhook" class="custom-input" value="https://ops.aegis-orbital.space/webhooks/conjunction-alerts" />
+                </div>
+
+                <div class="toggle-group mb-16">
+                  <div class="toggle-info">
+                    <span class="toggle-title">Autonomous 24/7 Overwatch</span>
+                    <span class="field-hint">Continuously screen all pairs and alert ground control.</span>
+                  </div>
+                  <input type="checkbox" id="settingOverwatch" checked class="custom-toggle" />
+                </div>
+
+                <div class="toggle-group">
+                  <div class="toggle-info">
+                    <span class="toggle-title">Auto-Generate Evasive Maneuver Packages</span>
+                    <span class="field-hint">Immediately synthesize 4 candidate delta-v plans for high-risk conjunctions.</span>
+                  </div>
+                  <input type="checkbox" id="settingAutoManeuver" checked class="custom-toggle" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Alerts Drawer / Modal -->
+    <div class="alerts-drawer-overlay" id="alertsDrawerOverlay" hidden></div>
+    <aside class="alerts-drawer" id="alertsDrawer" hidden aria-label="Alerts Center">
+      <div class="drawer-header">
+        <div class="drawer-title-wrap">
+          <i class="fa-solid fa-bell text-ruby"></i>
+          <h3>Alerts Center</h3>
+        </div>
+        <div class="drawer-actions">
+          <button class="text-btn" id="clearAlertsBtn">Acknowledge All</button>
+          <button class="close-btn" id="closeAlertsDrawerBtn" aria-label="Close">&times;</button>
+        </div>
+      </div>
+      <div class="alerts-drawer-list" id="alertsDrawerList">
+        <div class="loading-state">Loading alerts...</div>
+      </div>
+    </aside>
+
+    <!-- Object Inspection Modal -->
+    <div class="modal-overlay" id="objectModalOverlay" hidden>
+      <div class="modal-card" id="objectModal" role="dialog" aria-modal="true" aria-labelledby="modalObjName">
+        <div class="modal-header">
+          <div>
+            <h3 class="modal-title" id="modalObjName">Object Details</h3>
+            <span class="modal-subtitle" id="modalObjNorad">NORAD ID: --</span>
+          </div>
+          <button class="close-btn" id="closeObjectModalBtn" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body" id="modalObjBody">
+          <div class="loading-state">Fetching state vector...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div class="menu-overlay" id="menuOverlay" hidden></div>
+    <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+      <nav class="mobile-nav" aria-label="Mobile">
+        <a class="m-link is-active" href="#landing" data-nav="landing">Dashboard</a>
+        <a class="m-link" href="#catalog" data-nav="catalog">Catalog</a>
+        <a class="m-link" href="#conjunctions" data-nav="conjunctions">Conjunctions</a>
+        <a class="m-link" href="#maneuvers" data-nav="maneuvers">Maneuvers</a>
+        <a class="m-link" href="#calculator" data-nav="calculator">Calculator</a>
+        <a class="m-link" href="#reports" data-nav="reports">Reports</a>
+        <a class="m-link" href="#settings" data-nav="settings">Settings</a>
+      </nav>
+    </div>
+
+    <!-- Three.js & OrbitControls for 3D LEO Orbital Trajectory Visualizer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

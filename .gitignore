@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+venv/
+.env
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large model files (tracked via Git LFS or excluded)
+*.glb
+
+# Temp files
+celestrak_out.txt
+celestrak_starlink.txt
