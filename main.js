@@ -248,37 +248,42 @@
     var stars = new THREE.Points(starGeo, starMat);
     scene.add(stars);
 
-    // Load GLB Earth Model
-    if (typeof THREE.GLTFLoader !== "undefined") {
-      var loader = new THREE.GLTFLoader();
-      loader.load("earth_-_16k_high_resolution.glb", function (gltf) {
-        var earthModel = gltf.scene;
+    // Texture Loader for High-Res Photorealistic Earth & Clouds
+    var textureLoader = new THREE.TextureLoader();
+    textureLoader.crossOrigin = "anonymous";
+    var dayTexture = textureLoader.load("https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg");
+    var bumpTexture = textureLoader.load("https://unpkg.com/three-globe/example/img/earth-topology.png");
+    var specTexture = textureLoader.load("https://unpkg.com/three-globe/example/img/earth-water.png");
+    var cloudTexture = textureLoader.load("https://unpkg.com/three-globe/example/img/earth-clouds.png");
 
-        // Auto-scale and center
-        var box = new THREE.Box3().setFromObject(earthModel);
-        var center = box.getCenter(new THREE.Vector3());
-        var size = box.getSize(new THREE.Vector3());
-        var maxDim = Math.max(size.x, size.y, size.z);
-        var scale = 5.5 / maxDim;
-        earthModel.scale.set(scale, scale, scale);
-        earthModel.position.sub(center.multiplyScalar(scale));
+    // Photorealistic Earth Surface
+    var earthGeo = new THREE.SphereGeometry(2.75, 64, 64);
+    var earthMat = new THREE.MeshPhongMaterial({
+      map: dayTexture,
+      bumpMap: bumpTexture,
+      bumpScale: 0.05,
+      specularMap: specTexture,
+      specular: new THREE.Color(0x335577),
+      shininess: 18
+    });
+    var earthMesh = new THREE.Mesh(earthGeo, earthMat);
+    scene.add(earthMesh);
+    landingGlobe.earth = earthMesh;
 
-        scene.add(earthModel);
-        landingGlobe.earth = earthModel;
+    // Atmospheric Cloud Layer
+    var cloudGeo = new THREE.SphereGeometry(2.79, 64, 64);
+    var cloudMat = new THREE.MeshPhongMaterial({
+      map: cloudTexture,
+      transparent: true,
+      opacity: 0.52,
+      blending: THREE.AdditiveBlending
+    });
+    var cloudMesh = new THREE.Mesh(cloudGeo, cloudMat);
+    scene.add(cloudMesh);
+    landingGlobe.clouds = cloudMesh;
 
-        // Create orbiting satellites after earth loads
-        createOrbitingSatellites(scene, 2.85);
-      }, function (progress) {
-        // Loading progress - optional
-      }, function (error) {
-        console.warn("GLB load failed, using fallback sphere:", error);
-        createFallbackEarth(scene);
-        createOrbitingSatellites(scene, 2.85);
-      });
-    } else {
-      createFallbackEarth(scene);
-      createOrbitingSatellites(scene, 2.85);
-    }
+    // Create orbiting satellites
+    createOrbitingSatellites(scene, 2.82);
 
     landingGlobe.clock = new THREE.Clock();
     landingGlobe.initialized = true;
@@ -294,19 +299,6 @@
       camera.updateProjectionMatrix();
       renderer.setSize(cw, ch);
     });
-  }
-
-  function createFallbackEarth(scene) {
-    var earthGeo = new THREE.SphereGeometry(2.75, 64, 64);
-    var earthMat = new THREE.MeshPhongMaterial({
-      color: 0x1a3a5c,
-      emissive: 0x0a1a2f,
-      specular: 0x222244,
-      shininess: 25
-    });
-    var earthMesh = new THREE.Mesh(earthGeo, earthMat);
-    scene.add(earthMesh);
-    landingGlobe.earth = earthMesh;
   }
 
   function createOrbitingSatellites(scene, earthRadius) {
@@ -515,31 +507,49 @@
       globe3D.controls.autoRotateSpeed = 0.4;
     }
 
-    // Lighting
-    var ambient = new THREE.AmbientLight(0x334466, 1.2);
+    // Lighting (Sunlight + Space ambient)
+    var ambient = new THREE.AmbientLight(0xffffff, 0.9);
     globe3D.scene.add(ambient);
 
-    var sunLight = new THREE.DirectionalLight(0xffffff, 1.8);
+    var sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
     sunLight.position.set(40, 20, 50);
     globe3D.scene.add(sunLight);
 
+    var rimLight = new THREE.DirectionalLight(0x4488ff, 0.5);
+    rimLight.position.set(-40, -15, -40);
+    globe3D.scene.add(rimLight);
+
+    // Texture Loader for High-Res Photorealistic Earth
+    var texLoader = new THREE.TextureLoader();
+    texLoader.crossOrigin = "anonymous";
+    var dayTex = texLoader.load("https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg");
+    var bumpTex = texLoader.load("https://unpkg.com/three-globe/example/img/earth-topology.png");
+    var specTex = texLoader.load("https://unpkg.com/three-globe/example/img/earth-water.png");
+    var cloudTex = texLoader.load("https://unpkg.com/three-globe/example/img/earth-clouds.png");
+
     // Earth Sphere (Scale: 1 unit = 1000 km, Earth Radius = 6.371 units)
-    var earthGeo = new THREE.SphereGeometry(6.371, 48, 48);
+    var earthGeo = new THREE.SphereGeometry(6.371, 64, 64);
     var earthMat = new THREE.MeshPhongMaterial({
-      color: 0x11223a,
-      emissive: 0x050c18,
-      specular: 0x224488,
-      shininess: 25,
-      wireframe: false
+      map: dayTex,
+      bumpMap: bumpTex,
+      bumpScale: 0.05,
+      specularMap: specTex,
+      specular: new THREE.Color(0x335588),
+      shininess: 20
     });
     globe3D.earth = new THREE.Mesh(earthGeo, earthMat);
     globe3D.scene.add(globe3D.earth);
 
-    // Earth Grid Lines (Latitude & Longitude)
-    var gridMat = new THREE.LineBasicMaterial({ color: 0x1d3557, transparent: true, opacity: 0.35 });
-    var wireframeGeo = new THREE.WireframeGeometry(earthGeo);
-    var earthGrid = new THREE.LineSegments(wireframeGeo, gridMat);
-    globe3D.earth.add(earthGrid);
+    // Atmospheric Cloud Layer
+    var cloudGeo = new THREE.SphereGeometry(6.43, 64, 64);
+    var cloudMat = new THREE.MeshPhongMaterial({
+      map: cloudTex,
+      transparent: true,
+      opacity: 0.52,
+      blending: THREE.AdditiveBlending
+    });
+    globe3D.clouds = new THREE.Mesh(cloudGeo, cloudMat);
+    globe3D.scene.add(globe3D.clouds);
 
     // Equatorial Ring
     var eqGeo = new THREE.RingGeometry(6.38, 6.42, 64);
@@ -610,7 +620,10 @@
     function animate() {
       requestAnimationFrame(animate);
       if (globe3D.earth) {
-        globe3D.earth.rotation.y += 0.001;
+        globe3D.earth.rotation.y += 0.0006;
+      }
+      if (globe3D.clouds) {
+        globe3D.clouds.rotation.y += 0.0009;
       }
       if (globe3D.controls) globe3D.controls.update();
       globe3D.renderer.render(globe3D.scene, globe3D.camera);
