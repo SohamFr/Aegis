@@ -537,5 +537,8 @@ async def websocket_alerts_endpoint(websocket: WebSocket):
     except Exception:
         ws_manager.disconnect_alerts(websocket)
 
-# Serve current directory static assets
-app.mount("/", StaticFiles(directory="Z:/CodeBase/craftNcode-gy", html=True), name="static")
+# Serve current directory static assets dynamically across Windows, Linux, Render & Docker
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
+app.mount("/", StaticFiles(directory=str(BASE_DIR), html=True), name="static")
+
