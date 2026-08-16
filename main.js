@@ -182,7 +182,7 @@
 
     // Camera
     var camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 2000);
-    camera.position.set(0, 1.2, 7.5);
+    camera.position.set(0, 1.2, 12);
     landingGlobe.camera = camera;
 
     // Renderer
@@ -200,9 +200,7 @@
       var controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.06;
-      controls.enableZoom = true;
-      controls.minDistance = 3.5;
-      controls.maxDistance = 12;
+      controls.enableZoom = false;
       controls.enablePan = false;
       controls.autoRotate = false;
       controls.autoRotateSpeed = 0;
@@ -211,23 +209,23 @@
     }
 
     // Lighting
-    var ambientLight = new THREE.AmbientLight(0x334455, 0.6);
+    var ambientLight = new THREE.AmbientLight(0x334455, 0.85); // Increased for better fill
     scene.add(ambientLight);
 
-    var sunLight = new THREE.DirectionalLight(0xffeedd, 1.8);
+    var sunLight = new THREE.DirectionalLight(0xfff5e6, 2.2); // Warmer, brighter sun
     sunLight.position.set(5, 3, 5);
     scene.add(sunLight);
 
-    var rimLight = new THREE.DirectionalLight(0x4488ff, 0.4);
+    var rimLight = new THREE.DirectionalLight(0x4488ff, 0.6); // Stronger rim light
     rimLight.position.set(-3, 1, -5);
     scene.add(rimLight);
 
     // Atmospheric glow ring
-    var glowGeo = new THREE.RingGeometry(2.9, 3.3, 64);
+    var glowGeo = new THREE.RingGeometry(2.8, 3.4, 64);
     var glowMat = new THREE.MeshBasicMaterial({
-      color: 0x4488ff,
+      color: 0x5599ff,
       transparent: true,
-      opacity: 0.12,
+      opacity: 0.22,
       side: THREE.DoubleSide
     });
     var glowRing = new THREE.Mesh(glowGeo, glowMat);
@@ -271,19 +269,33 @@
     landingGlobe.earth = earthMesh;
 
     // Atmospheric Cloud Layer
-    var cloudGeo = new THREE.SphereGeometry(2.79, 64, 64);
+    var cloudGeo = new THREE.SphereGeometry(2.78, 64, 64);
     var cloudMat = new THREE.MeshPhongMaterial({
       map: cloudTexture,
       transparent: true,
-      opacity: 0.52,
-      blending: THREE.AdditiveBlending
+      opacity: 0.75, // Denser clouds for a cinematic look
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
     });
     var cloudMesh = new THREE.Mesh(cloudGeo, cloudMat);
     scene.add(cloudMesh);
     landingGlobe.clouds = cloudMesh;
 
-    // Create orbiting satellites
-    createOrbitingSatellites(scene, 2.82);
+    // Fetch catalog data and create orbiting satellites
+    var baseUrl = window.location.protocol === "file:" ? "http://127.0.0.1:8000" : "";
+    fetch(baseUrl + "/api/catalog")
+      .then(function(res) { return res.json(); })
+      .then(function(catalog) {
+        if (catalog && catalog.length > 0) {
+          createOrbitingSatellites(scene, 2.82, catalog);
+        } else {
+          createOrbitingSatellites(scene, 2.82, null);
+        }
+      })
+      .catch(function(err) {
+        console.warn("Failed to fetch catalog for globe", err);
+        createOrbitingSatellites(scene, 2.82, null);
+      });
 
     landingGlobe.clock = new THREE.Clock();
     landingGlobe.initialized = true;
@@ -301,25 +313,49 @@
     });
   }
 
-  function createOrbitingSatellites(scene, earthRadius) {
-    var satCount = 40;
-    var satColors = [0x00ccff, 0xff4466, 0x44ff88, 0xffaa22, 0xaa66ff, 0xff66aa];
+  function createOrbitingSatellites(scene, earthRadius, catalogData) {
+    // If no catalog data, fallback to rendering a few random satellites
+    var satCount = catalogData ? catalogData.length : 40;
+    
+    // Scale factor to map real altitude (km) to Three.js world units
+    var earthRadiusKm = 6371.0;
+    var scale = 2.75 / earthRadiusKm;
 
     for (var i = 0; i < satCount; i++) {
-      var orbitRadius = earthRadius + 0.25 + Math.random() * 1.2;
-      var inclination = (Math.random() - 0.5) * Math.PI * 0.9;
+      var item = catalogData ? catalogData[i] : null;
+      var type = item ? item.type : "UNKNOWN";
+      
+      // Determine realistic or random orbital parameters
+      var alt_km = item && item.altitude_km ? item.altitude_km : (400 + Math.random() * 800);
+      var inc_deg = item && item.inclination_deg !== undefined ? item.inclination_deg : (Math.random() - 0.5) * 180;
+      
+      var orbitRadius = earthRadius + (alt_km * scale);
+      var inclination = inc_deg * (Math.PI / 180);
       var startAngle = Math.random() * Math.PI * 2;
-      var speed = 0.15 + Math.random() * 0.35;
-      var color = satColors[i % satColors.length];
+      
+      // Roughly model orbital speed (slower at higher altitudes)
+      var speed = 0.15 + (1000 / (alt_km + 1000)) * 0.2;
+
+      // Map object type to contrasting, cinematic colors
+      var color;
+      if (type === "PAYLOAD") {
+        color = 0xf2cc60; // Yellow for operational satellites
+      } else if (type === "DEBRIS") {
+        color = 0xff7b72; // Red for dangerous debris
+      } else if (type === "ROCKET BODY") {
+        color = 0x56d364; // Green for rocket bodies
+      } else {
+        color = 0x00ccff; // Cyan fallback
+      }
 
       // Satellite body (small glowing sphere)
-      var satGeo = new THREE.SphereGeometry(0.02 + Math.random() * 0.015, 8, 8);
+      var satGeo = new THREE.SphereGeometry(0.012, 8, 8);
       var satMat = new THREE.MeshBasicMaterial({ color: color });
       var satMesh = new THREE.Mesh(satGeo, satMat);
       scene.add(satMesh);
 
       // Glow point light on satellite
-      var satGlow = new THREE.PointLight(color, 0.15, 0.6);
+      var satGlow = new THREE.PointLight(color, 0.2, 0.8);
       satMesh.add(satGlow);
 
       // Orbit path ring (thin line)
@@ -336,11 +372,11 @@
       var orbitLineMat = new THREE.LineBasicMaterial({
         color: color,
         transparent: true,
-        opacity: 0.08
+        opacity: 0.12 // Thin, subtle line
       });
       var orbitLine = new THREE.Line(orbitGeo3D, orbitLineMat);
 
-      // Apply inclination rotation
+      // Apply inclination rotation using a normalized axis
       var axisVec = new THREE.Vector3(
         Math.cos(startAngle * 0.5),
         0,
@@ -368,6 +404,11 @@
     var elapsed = landingGlobe.clock ? landingGlobe.clock.getElapsedTime() : 0;
 
     // Earth stays fixed - no rotation
+
+    // Slowly rotate clouds for a cinematic atmospheric effect
+    if (landingGlobe.clouds) {
+      landingGlobe.clouds.rotation.y += dt * 0.012;
+    }
 
     // Update satellite positions
     for (var i = 0; i < landingGlobe.satellites.length; i++) {
@@ -405,6 +446,31 @@
 
   // Initialize the globe when the DOM is ready
   initLandingGlobe();
+
+  /* ---------------------------------------------------------
+     Landing Globe — scroll-reveal via IntersectionObserver
+     --------------------------------------------------------- */
+  (function () {
+    var globeContainer = document.getElementById("landingGlobeContainer");
+    if (!globeContainer) return;
+
+    if ("IntersectionObserver" in window) {
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              globeContainer.classList.add("is-visible");
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      observer.observe(globeContainer);
+    } else {
+      // Fallback: just show it immediately
+      globeContainer.classList.add("is-visible");
+    }
+  })();
 
   /* ---------------------------------------------------------
      API Client & State Management

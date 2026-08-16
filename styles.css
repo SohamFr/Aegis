@@ -184,7 +184,7 @@ body.mission-control-active .bg {
 
 #landing.view.active {
   flex: none;
-  min-height: calc(100vh - 80px);
+  min-height: auto;
 }
 
 /* Landing scrollable spacer */
@@ -370,7 +370,7 @@ body.mission-control-active .bg {
 .hero {
   position: relative;
   z-index: 1;
-  flex: 1;
+  flex-shrink: 0;
   width: 100%;
   max-width: 900px;
   display: flex;
@@ -380,6 +380,7 @@ body.mission-control-active .bg {
   text-align: center;
   padding-top: clamp(20px, 4vh, 60px);
   min-height: calc(100vh - 180px);
+  padding-bottom: clamp(40px, 6vh, 80px);
 }
 
 .trust {
@@ -509,8 +510,7 @@ body.mission-control-active .bg {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: clamp(12px, 2vw, 24px);
-  margin-top: auto;
-  margin-bottom: 0;
+  margin-bottom: clamp(40px, 6vh, 80px);
 }
 
 .stat {
@@ -1603,11 +1603,22 @@ body.mission-control-active .bg {
 .landing-globe-container {
   position: relative;
   width: 100%;
-  height: 60vh;
+  height: 100vh;
   margin: 0 auto;
   z-index: 2;
   cursor: grab;
   overflow: hidden;
+  flex-shrink: 0;
+  /* Start invisible — revealed by IntersectionObserver */
+  opacity: 0;
+  transform: translateY(40px) scale(0.97);
+  transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.landing-globe-container.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .landing-globe-container:active {
@@ -1622,6 +1633,6 @@ body.mission-control-active .bg {
 
 @media (max-width: 768px) {
   .landing-globe-container {
-    height: 50vh;
+    height: 100vh;
   }
 }
